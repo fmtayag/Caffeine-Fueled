@@ -1,0 +1,3 @@
+InDev 1 (1/12/2021)
+- Coded in the basic foundations of the game
+Gonna continue this tomorrow
