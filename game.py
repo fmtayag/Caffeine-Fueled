@@ -1,11 +1,12 @@
-# Barista Game
+# Final Frontier
+# An adventure into the cosmos
 # Programming by: zyenapz
     # E-maiL: zyenapz@gmail.com
     # Website: zyenapz.github.io
 # Pygame version: Pygame 2.0.0 (SDL 2.0.12, python 3.7.9)
 
 # Metadata
-TITLE = "Barista Game"
+TITLE = "Final Frontier"
 AUTHOR = "zyenapz"
 EMAIL = "zyenapz@gmail.com"
 WEBSITE = "zyenapz.github.io"
@@ -15,6 +16,7 @@ from pygame.locals import *
 from random import randrange, choice, choices
 from itertools import repeat
 from data.scripts.scene import Scene, SceneManager
+from data.scripts.actors import Crew, Ship
 from data.scripts.config import *
 
 pygame.init()
@@ -25,7 +27,15 @@ DATA_DIR = os.path.join(GAME_DIR, "data")
 
 class GameScene(Scene):
     def __init__(self):
-        pass
+        self.STATES = ("PAUSED", "UNPAUSED")
+        self.crews_alive = list()
+        self.crews_dead = list()
+        self.the_ship = Ship("IMG_NOT_AVAILABLE")
+        self.day = 1
+
+        # Test adding
+        c1 = Crew("IMG_NOT_AVAILABLE", {"name": "francis", "gender": "male", "personality": "greedy", "role": "medic"})
+        self.crews_alive.append(c1)
 
     def handle_events(self, events):
         pass
