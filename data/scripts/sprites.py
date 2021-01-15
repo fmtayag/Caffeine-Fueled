@@ -1,0 +1,176 @@
+import pygame, math
+from random import randrange
+
+class Player(pygame.sprite.Sprite):
+    def __init__(self, images):
+        super().__init__()
+        self.images = images
+        self.image = self.images["IDLE"]
+        self.rect = self.image.get_rect()
+        self.rect.x = 100
+        self.rect.y = 100
+        self.speedx = 4
+        self.speedy = 0
+        self.GRAVITY = 0.1
+        self.boost = 0.2
+        self.state = "IDLE"
+
+    def update(self):
+        self.image = self.images["IDLE"]
+        self.state = "IDLE"
+        pressed = pygame.key.get_pressed()
+        if pressed[pygame.K_a]:
+            self.rect.x -= self.speedx
+            self.image = self.images["MOVLEFT"]
+            self.state = "MOVLEFT"
+        if pressed[pygame.K_d]:
+            self.rect.x += self.speedx
+            self.image = self.images["MOVRIGHT"]
+            self.state = "MOVRIGHT"
+        if pressed[pygame.K_SPACE]:
+            self.speedy -= (self.GRAVITY + self.boost)
+
+        self.speedy += self.GRAVITY
+        self.rect.y += self.speedy
+
+    def draw(self, window):
+        window.blit(self.image, (self.rect.x,self.rect.y))
+
+class Obstacle(pygame.sprite.Sprite):
+    def __init__(self, obstacle_imgs, play_area):
+        super().__init__()
+        self.obstacle_imgs = obstacle_imgs
+        self.obstacle_img = self.obstacle_imgs[0]
+        self.image = pygame.Surface((self.obstacle_img.get_width() * 1.2, self.obstacle_img.get_height() * 1.2))
+        self.rect = self.image.get_rect()
+        self.rect.x = play_area.get_width() + randrange(32, 128)
+        self.rect.y = randrange(self.image.get_height() / 2, play_area.get_height() - self.image.get_height() - 64)
+        # For bobbing effect
+        self.y = 0
+        self.multiplier = 4
+        self.bob = math.sin(self.y) * self.multiplier
+        self.obstacle_img_rect = self.obstacle_img.get_rect(center=(self.image.get_width() / 2 - self.obstacle_img.get_width() / 2, self.image.get_height() / 2))
+        # For animation
+        if len(self.obstacle_imgs) > 1:
+            self.anim_timer = pygame.time.get_ticks()
+            self.anim_delay = 100
+            self.frame = 0
+
+    def update(self):
+        if len(self.obstacle_imgs) > 1:
+            self.animate()
+        self.y += 0.1
+        self.bob = math.sin(self.y) * self.multiplier
+        self.image.fill('black')
+        self.image.blit(self.obstacle_img, (self.obstacle_img_rect.center[0], 6 - self.bob)) # 6 is just an arbitrary offset
+        self.image.set_colorkey('black')
+        if self.rect.right < 0:
+            self.kill()
+
+    def animate(self):
+        if pygame.time.get_ticks() - self.anim_timer > self.anim_delay:
+            self.anim_timer = pygame.time.get_ticks()
+            self.frame = not self.frame
+            self.obstacle_img = self.obstacle_imgs[self.frame]
+
+class Hat(pygame.sprite.Sprite):
+    def __init__(self, image, wearer, x_offset, y_offset):
+        super().__init__()
+        self.wearer = wearer
+        self.x_offset = x_offset
+        self.y_offset = y_offset
+        self.image = image
+        self.rect = self.image.get_rect()
+        self.rect.centerx = self.wearer.rect.centerx
+        self.rect.bottom = self.wearer.rect.top + self.y_offset
+
+    def update(self):
+        if self.wearer.state == "IDLE":
+            self.rect.centerx = self.wearer.rect.centerx
+        elif self.wearer.state == "MOVLEFT":
+            self.rect.centerx = self.wearer.rect.centerx - self.x_offset
+        elif self.wearer.state == "MOVRIGHT":
+            self.rect.centerx = self.wearer.rect.centerx + self.x_offset
+
+        self.rect.bottom = self.wearer.rect.top + self.y_offset
+
+    def draw(self, window):
+        window.blit(self.image, (self.rect.x,self.rect.y))
+
+class Pet(pygame.sprite.Sprite):
+    def __init__(self, image, wearer):
+        super().__init__()
+        self.wearer = wearer
+        self.image = image
+        self.rect = self.image.get_rect()
+        self.rect.centerx = self.wearer.rect.left
+        self.rect.bottom = self.wearer.rect.bottom
+        # For bobbing effect
+        self.y = 0
+        self.multiplier = 8
+        self.bob = math.sin(self.y) * self.multiplier
+
+    def update(self):
+        self.rect.centerx = self.wearer.rect.left
+
+        self.y += 0.1
+        self.bob = math.sin(self.y) * self.multiplier
+
+        self.rect.bottom = self.wearer.rect.bottom + self.bob
+
+    def draw(self, window):
+        window.blit(self.image, (self.rect.x,self.rect.y))
+
+# Unused
+class Button(pygame.sprite.Sprite):
+    def __init__(self, x, y, text, font_name, color, width, height, thickness):
+        super().__init__()
+        self.x = x
+        self.y = y
+        self.text = text.split(" ")
+        self.font_name = font_name
+        self.color = color
+        self.width = width
+        self.height = height
+        self.thickness = thickness
+        self.orig_thickness = self.thickness
+        self.state = "HIGHLIGHTED"
+        
+        # Surface
+        self.image = pygame.Surface((self.width, self.height)).convert_alpha()
+        self.image.set_colorkey('black')
+        self.rect = self.image.get_rect()
+        self.rect.center = (self.x, self.y)
+        self.img_center = (self.image.get_width() / 2, self.image.get_height() / 2)
+
+        # Font
+        self.font_size = self.width // 8
+        self.font_object = pygame.font.Font(self.font_name, self.font_size)
+
+    def update(self):
+        if self.state == "HIGHLIGHTED":
+            self.highlight()
+        elif self.state == "UNHIGHLIGHTED":
+            self.unhighlight()
+
+    def highlight(self):
+        self.refill()
+        pygame.draw.rect(self.image, self.color, (0, 0, self.width, self.height), 0)
+        self.draw_text()
+
+    def unhighlight(self):
+        self.refill()
+        pygame.draw.rect(self.image, self.color, (0, 0, self.width, self.height), self.thickness)
+        self.draw_text()
+
+    def refill(self):
+        self.image.fill('black')
+        self.image.set_colorkey('black')
+
+    def draw_text(self):
+        y_pos = 1
+        for text in self.text:
+            self.font_render = self.font_object.render(text, 1, self.color)
+            self.fr_rect = self.font_render.get_rect(center=(self.img_center[0], self.img_center[1] * y_pos / 1.5))
+            self.image.blit(self.font_render, self.fr_rect)
+            y_pos += 1

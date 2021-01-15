@@ -1,7 +1,0 @@
-InDev 2 (1/13/2021)
-- Changed the concept of the game from a coffee house management game to a space adventure
-- Coded in basic data structures
-
-InDev 1 (1/12/2021)
-- Coded in the basic foundations of the game
-Gonna continue this tomorrow
