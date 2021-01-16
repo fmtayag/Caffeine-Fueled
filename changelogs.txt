@@ -1,0 +1,15 @@
+InDev 4 (1/16/2021)
+- Added collisions between player
+- Added more hats and pets
+- Added a "shielded" status for the player
+- Added an area for the stats
+- Changed the backgrounds' textures
+- Changed the crate's texture
+- Added custom border image
+- Brought back the new changelogs
+
+InDev 3 (1/15/2021)
+- Created a new game instead. Now it's a jetpack game.
+- Added textures
+- Added basic functionalities
+- Added pets and hats

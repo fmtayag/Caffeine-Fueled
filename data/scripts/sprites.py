@@ -5,7 +5,7 @@ class Player(pygame.sprite.Sprite):
     def __init__(self, images):
         super().__init__()
         self.images = images
-        self.image = self.images["IDLE"]
+        self.image = self.images["NORMAL"]["IDLE"]
         self.rect = self.image.get_rect()
         self.rect.x = 100
         self.rect.y = 100
@@ -14,18 +14,24 @@ class Player(pygame.sprite.Sprite):
         self.GRAVITY = 0.1
         self.boost = 0.2
         self.state = "IDLE"
+        self.status = "SHIELDED"
+
+        # Color correction
+        self.color_correction = pygame.Surface((self.image.get_width(), self.image.get_height()))
+        self.color_correction.set_alpha(100)
 
     def update(self):
-        self.image = self.images["IDLE"]
+        self.image = self.images[self.status]["IDLE"]
         self.state = "IDLE"
         pressed = pygame.key.get_pressed()
+
         if pressed[pygame.K_a]:
             self.rect.x -= self.speedx
-            self.image = self.images["MOVLEFT"]
+            self.image = self.images[self.status]["MOVLEFT"]
             self.state = "MOVLEFT"
         if pressed[pygame.K_d]:
             self.rect.x += self.speedx
-            self.image = self.images["MOVRIGHT"]
+            self.image = self.images[self.status]["MOVRIGHT"]
             self.state = "MOVRIGHT"
         if pressed[pygame.K_SPACE]:
             self.speedy -= (self.GRAVITY + self.boost)
@@ -44,7 +50,7 @@ class Obstacle(pygame.sprite.Sprite):
         self.image = pygame.Surface((self.obstacle_img.get_width() * 1.2, self.obstacle_img.get_height() * 1.2))
         self.rect = self.image.get_rect()
         self.rect.x = play_area.get_width() + randrange(32, 128)
-        self.rect.y = randrange(self.image.get_height() / 2, play_area.get_height() - self.image.get_height() - 64)
+        self.rect.y = randrange(self.image.get_height() / 2, play_area.get_height() - self.image.get_height() - 32)
         # For bobbing effect
         self.y = 0
         self.multiplier = 4
@@ -120,6 +126,17 @@ class Pet(pygame.sprite.Sprite):
 
     def draw(self, window):
         window.blit(self.image, (self.rect.x,self.rect.y))
+
+class ChickenOMeter(pygame.sprite.Sprite):
+    def __init__(self, images, pos):
+        super().__init__()
+        self.images = images
+        self.image = self.images[0]
+        self.rect = self.image.get_rect()
+        self.rect.center = pos
+    
+    def update(self):
+        pass
 
 # Unused
 class Button(pygame.sprite.Sprite):
