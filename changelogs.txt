@@ -1,3 +1,13 @@
+InDev 5 (1/17/2021)
+- Added score, shield-o-meter, and coffee-o-meter to stats area
+- Tweaked the movement of the player
+- Added powerups
+- Added particle effects and screen shake (my signature!)
+- Name of the game is now Caffeine Fueled
+- Added fonts
+- Added some maths stuff
+- Added a chicken pet!
+
 InDev 4 (1/16/2021)
 - Added collisions between player
 - Added more hats and pets
