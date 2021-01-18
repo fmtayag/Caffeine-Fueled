@@ -8,7 +8,7 @@ class Player(pygame.sprite.Sprite):
         self.images = images
         self.image = self.images["NORMAL"]["IDLE"]
         self.rect = self.image.get_rect()
-        self.rect.x = 100
+        self.rect.right = 0
         self.rect.y = 100
         self.speedx = 4
         self.speedy = 4
@@ -16,16 +16,17 @@ class Player(pygame.sprite.Sprite):
         self.boost = 0.23
         self.state = "IDLE"
         self.status = "SHIELDED"
-        self.shield = 2
+        self.shield = 0
         self.fuel = 100
         self.is_dead = False
+        self.has_started = False
 
         # Color correction
         self.color_correction = pygame.Surface((self.image.get_width(), self.image.get_height()))
         self.color_correction.set_alpha(100)
 
     def update(self):
-        if self.fuel > 0 and not self.is_dead:
+        if self.fuel > 0 and not self.is_dead and self.has_started:
 
             if self.shield <= 0:
                 self.status = "NORMAL"
@@ -34,23 +35,30 @@ class Player(pygame.sprite.Sprite):
 
             self.image = self.images[self.status]["IDLE"]
             self.state = "IDLE"
-            pressed = pygame.key.get_pressed()
+            if self.has_started:
+                pressed = pygame.key.get_pressed()
 
-            if pressed[pygame.K_a]:
-                self.rect.x -= self.speedx * 1.5
-                self.image = self.images[self.status]["MOVLEFT"]
-                self.state = "MOVLEFT"
-            if pressed[pygame.K_d]:
-                self.rect.x += self.speedx
-                self.image = self.images[self.status]["MOVRIGHT"]
-                self.state = "MOVRIGHT"
-            if pressed[pygame.K_w]:
-                self.speedy -= (self.GRAVITY + self.boost)
-            if pressed[pygame.K_s]:
-                self.speedy += (self.GRAVITY + self.boost * 0.2)
+                if pressed[pygame.K_a] or pressed[pygame.K_LEFT]:
+                    self.rect.x -= self.speedx * 1.5
+                    self.image = self.images[self.status]["MOVLEFT"]
+                    self.state = "MOVLEFT"
+                if pressed[pygame.K_d] or pressed[pygame.K_RIGHT]:
+                    self.rect.x += self.speedx
+                    self.image = self.images[self.status]["MOVRIGHT"]
+                    self.state = "MOVRIGHT"
+                if pressed[pygame.K_w] or pressed[pygame.K_SPACE] or pressed[pygame.K_UP]:
+                    self.speedy -= (self.GRAVITY + self.boost)
+                if pressed[pygame.K_s] or pressed[pygame.K_LSHIFT] or pressed[pygame.K_DOWN]:
+                    self.speedy += (self.GRAVITY + self.boost * 0.2)
 
             self.speedy += self.GRAVITY
             self.rect.y += self.speedy
+        elif not self.has_started:
+            if self.rect.x == 100:
+                self.has_started = True
+                self.speedy = 0
+            self.rect.x += 1
+            self.rect.y = 120
         else:
             self.image.set_alpha(100)
             self.speedy += self.GRAVITY
@@ -167,7 +175,7 @@ class CoffeeOMeter(pygame.sprite.Sprite):
         surface.blit(self.image, self.rect.center)
 
 class Text(pygame.sprite.Sprite):
-    def __init__(self, x, y, text, font_type, size, color):
+    def __init__(self, x, y, text, font_type, size, color, visible=True):
         super().__init__()
         self.image = pygame.Surface((size * len(text),size)).convert_alpha()
         #self.image.fill('blue')
@@ -175,6 +183,7 @@ class Text(pygame.sprite.Sprite):
         self.rect = self.image.get_rect()
         self.rect.centerx = x
         self.rect.y = y
+        self.visible = visible
 
         # The text
         self.text = str(text)
@@ -185,13 +194,16 @@ class Text(pygame.sprite.Sprite):
         self.font = pygame.font.Font(self.font_type, self.size)
         self.rendered = self.font.render(str(self.text), 0, self.color)
         self.rendered_rect = self.rendered.get_rect(center=(self.image.get_width()/2, self.image.get_height()/2))
-        self.image.blit(self.rendered, self.rendered_rect)
 
     def update(self):
-        self.image.fill('black')
-        self.rendered = self.font.render(str(self.text), 0, self.color)
-        self.rendered_rect = self.rendered.get_rect(center=(self.image.get_width()/2, self.image.get_height()/2))
-        self.image.blit(self.rendered, self.rendered_rect)
+        if self.visible:
+            self.image.fill('black')
+            self.rendered = self.font.render(str(self.text), 0, self.color)
+            self.rendered_rect = self.rendered.get_rect(center=(self.image.get_width()/2, self.image.get_height()/2))
+            self.image.blit(self.rendered, self.rendered_rect)
+        else:
+            self.image.fill('black')
+            self.image.set_colorkey('black')
 
 class Powerup(pygame.sprite.Sprite):
     def __init__(self, images, play_area):
@@ -220,7 +232,7 @@ class Powerup(pygame.sprite.Sprite):
 
     def roll_type(self, images):
         keys = list(images.keys())
-        keys = choices(keys, weights=[8,2], k=10)
+        keys = choices(keys, weights=[8,2,4], k=10)
         roll = choice(keys)
         return roll
 
@@ -272,7 +284,7 @@ class Shockwave(pygame.sprite.Sprite):
         self.color = color
         self.alpha = 255
         
-        # The circle
+        # The ripple
         self.expand_timer = pygame.time.get_ticks()
         self.expand_delay = 10
         self.radius = 2
@@ -294,58 +306,35 @@ class Shockwave(pygame.sprite.Sprite):
             self.image.fill((0,0,0,0))
             self.image.set_alpha(self.alpha)
             pygame.draw.circle(self.image, self.color, self.image.get_rect().center, self.radius, self.c_width)
+            #pygame.draw.rect(self.image, self.color, (0,0,0,0))
 
-
-# Unused
-class Button(pygame.sprite.Sprite):
-    def __init__(self, x, y, text, font_name, color, width, height, thickness):
+class JetpackTrail(pygame.sprite.Sprite):
+    def __init__(self, x, y, color):
         super().__init__()
-        self.x = x
-        self.y = y
-        self.text = text.split(" ")
-        self.font_name = font_name
-        self.color = color
-        self.width = width
-        self.height = height
-        self.thickness = thickness
-        self.orig_thickness = self.thickness
-        self.state = "HIGHLIGHTED"
-        
-        # Surface
-        self.image = pygame.Surface((self.width, self.height)).convert_alpha()
-        self.image.set_colorkey('black')
+        self.color = choice(color)
+        self.size = choice([8,12])
+        self.image = pygame.Surface((self.size,self.size)).convert_alpha()
+        self.image.fill(self.color)
         self.rect = self.image.get_rect()
-        self.rect.center = (self.x, self.y)
-        self.img_center = (self.image.get_width() / 2, self.image.get_height() / 2)
+        self.rect.x = x
+        self.rect.y = y + randrange(1, 8)
+        self.movspd = 8
+        self.spdx = randrange(-3,-1)
+        self.spdy = randrange(3,6)
+        self.alpha_decrease = randrange(16, 32)
 
-        # Font
-        self.font_size = self.width // 8
-        self.font_object = pygame.font.Font(self.font_name, self.font_size)
+        # For fade animation
+        self.alpha = 255
 
     def update(self):
-        if self.state == "HIGHLIGHTED":
-            self.highlight()
-        elif self.state == "UNHIGHLIGHTED":
-            self.unhighlight()
+        self.rect.x += self.spdx
+        self.rect.y += self.spdy
 
-    def highlight(self):
-        self.refill()
-        pygame.draw.rect(self.image, self.color, (0, 0, self.width, self.height), 0)
-        self.draw_text()
+        if self.alpha <= 0:
+            self.kill()
 
-    def unhighlight(self):
-        self.refill()
-        pygame.draw.rect(self.image, self.color, (0, 0, self.width, self.height), self.thickness)
-        self.draw_text()
+        self.fade()
 
-    def refill(self):
-        self.image.fill('black')
-        self.image.set_colorkey('black')
-
-    def draw_text(self):
-        y_pos = 1
-        for text in self.text:
-            self.font_render = self.font_object.render(text, 1, self.color)
-            self.fr_rect = self.font_render.get_rect(center=(self.img_center[0], self.img_center[1] * y_pos / 1.5))
-            self.image.blit(self.font_render, self.fr_rect)
-            y_pos += 1
+    def fade(self):
+        self.alpha -= self.alpha_decrease
+        self.image.set_alpha(self.alpha)

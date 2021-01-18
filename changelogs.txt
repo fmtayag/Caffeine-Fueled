@@ -1,3 +1,13 @@
+InDev 6 (1/18/2021)
+- Added coin powerup
+- Added fish pet
+- Edited ShieldOMeter texture so now it shows 'No Shield' when it has ran out
+- Adjusted the position of the hats using Aseprite
+- Added a 'Shop' feature where the player can shop for hats and pets
+- Added a game over screen
+- Added a GameData class that just contains all data that has to be saved
+- Adjusted the difficulty increase
+
 InDev 5 (1/17/2021)
 - Added score, shield-o-meter, and coffee-o-meter to stats area
 - Tweaked the movement of the player
