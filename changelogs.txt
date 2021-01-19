@@ -1,3 +1,8 @@
+InDev 7 (1/19/2021)
+- Finished the 'shop' feature
+- Finished adding the title screen
+- Preparing for release...
+
 InDev 6 (1/18/2021)
 - Added coin powerup
 - Added fish pet
