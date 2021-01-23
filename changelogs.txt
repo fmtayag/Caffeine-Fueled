@@ -1,3 +1,15 @@
+Release 1.0.2 (1/23/2021)
+- Fixed a bug where pressing ESC key when game is over won't save the keys
+- Hats cost 20 coins now, while pets still cost 30 coins
+- Moved the dev info image a bit to the left
+- Changed the help screen to briefly explain the gameplay
+
+Release 1.0.1 (1/20/2021)
+- Removed HWSURFACE and DOUBLEBUF in the display
+
+Release 1.0.0 (1/19/2021)
+- Released the game 
+
 InDev 7 (1/19/2021)
 - Finished the 'shop' feature
 - Finished adding the title screen

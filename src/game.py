@@ -217,7 +217,7 @@ class TitleScene(Scene):
         self.draw_background(window, self.bg_layer3_img, self.bg_layer3_rect, self.bg_layer3_x)
         window.blit(self.logo_img, (32,64))
         window.blit(self.menu_area, (96,198))
-        window.blit(self.dev_img, (380,128))
+        window.blit(self.dev_img, (360,128))
         if self.help_available:
             window.blit(self.help_area, (430, 32))
             self.help_area.fill('black')
@@ -282,7 +282,7 @@ class ShopScene(Scene):
             self.hat_equipped_x = 16 + (80 * self.hat_files.index(game_data.equipped_hat))
         self.cur_pet = 0
         self.cur_hat = 0
-        self.item_cost = 30
+        self.item_cost = 20
         self.debug_mode = False
         
         # Surfaces
@@ -423,6 +423,9 @@ class ShopScene(Scene):
                 self.text_isbought.visible = False
                 self.text_cost.visible = True
 
+            self.item_cost = 30
+            self.text_cost.text = f"C{self.item_cost}"
+
         elif self.cur_shop == self.hats_area:
 
             if self.hat_files[self.cur_hat] in game_data.owned_hats:
@@ -431,6 +434,9 @@ class ShopScene(Scene):
             else:
                 self.text_isbought.visible = False
                 self.text_cost.visible = True
+
+            self.item_cost = 20
+            self.text_cost.text = f"C{self.item_cost}"
 
         self.texts.update()
 
@@ -659,6 +665,14 @@ class GameScene(Scene):
                 if event.key == pygame.K_ESCAPE:
                     self.manager.go_to(TitleScene())
                     game_data.play_time += round(self.cur_playtime / 1000)
+
+                    if self.can_exit:
+                        game_data.coins += self.coins
+                        if round(self.score) > game_data.highscore:
+                            game_data.highscore = round(self.score)
+                        game_data.times_died += 1
+                        game_data.play_time += round(self.cur_playtime / 1000)
+                        self.manager.go_to(TitleScene())
 
     def update(self):
         
