@@ -33,6 +33,6 @@ Update 1.0.1
 - Bugfixing regarding it not running on some systems.
 Update 1.0.3
 - Title menu modified, (annoying) zyenapz image and info deleted,
-new intro zyenapz and Danix logos, credits option in title menu and
-added and save system changed for not have to change the save file
+new intro zyenapz and Danix logos in the intro, credits option in the
+title menu and save system changed for not have to change the save file
 for delete the save, now only you have to erase the save file.
