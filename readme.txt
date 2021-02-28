@@ -31,7 +31,10 @@ Music: 'HappyBeat' downloaded from YouTube and made by Electro Baptist.
 Contact
 -------
 zyenapz itch.io: zyenapz.itch.io
+zyenapz e-mail: zyenapz@gmail.com
+zyenapz web site: https://zyenapz.github.io/
 Danix itch.io: danix421.itch.io
+Danix Github: github.com/Danix421
 
 ---------------------
 Update 1.0.1
