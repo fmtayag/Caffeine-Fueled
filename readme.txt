@@ -1,5 +1,5 @@
 Caffeine Fueled
-Release version: 1.0.3
+Release version: 1.1
 
 Hello, there! I thank you so much for downloading Caffeine Fueled, my entry for the Pygame Community New Years Jam! I hope you enjoy the game!
 
@@ -39,7 +39,7 @@ Danix Github: github.com/Danix421
 ---------------------
 Update 1.0.1
 - Bugfixing regarding it not running on some systems.
-Update 1.0.3
+Update 1.1
 - Title menu modified, (annoying) zyenapz image and info deleted,
 new intro zyenapz and Danix logos in the intro, credits option in the
 title menu and save system changed for not have to change the save file
