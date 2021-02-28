@@ -17,14 +17,14 @@ S, SHIFT, DOWN 		- Move down
 A, LEFT 			    - Move Left
 D, RIGHT 			    - Move Right
 
-Requeriments
+Requirements
 ------------
 For use the source code (src), you need to install Pygame.
 For information of how to install Pygame visit https://www.pygame.org/wiki/GettingStarted/
 
 Credits
 --------
-Programming by Danix and zyenapz, art & sound effects by zyenapz.
+Originaly created and programmed by zyenapz and now contributed by Danix, art & sound effects by zyenapz.
 Font: 'Press Start' downloaded from codeman38.
 Music: 'HappyBeat' downloaded from YouTube and made by Electro Baptist.
 
@@ -32,6 +32,7 @@ Music: 'HappyBeat' downloaded from YouTube and made by Electro Baptist.
 Update 1.0.1
 - Bugfixing regarding it not running on some systems.
 Update 1.0.3
-- Title menu modified, credits option in title menu added and
-save system changed for not have to change the save file 
+- Title menu modified, (annoying) zyenapz image and info deleted,
+new intro zyenapz and Danix logos, credits option in title menu and
+added and save system changed for not have to change the save file
 for delete the save, now only you have to erase the save file.
