@@ -23,10 +23,15 @@ For use the source code (src), you need to install Pygame.
 For information of how to install Pygame visit https://www.pygame.org/wiki/GettingStarted/
 
 Credits
---------
+-------
 Originaly created and programmed by zyenapz and now contributed by Danix, art & sound effects by zyenapz.
 Font: 'Press Start' downloaded from codeman38.
 Music: 'HappyBeat' downloaded from YouTube and made by Electro Baptist.
+
+Contact
+-------
+zyenapz itch.io: zyenapz.itch.io
+Danix itch.io: danix421.itch.io
 
 ---------------------
 Update 1.0.1
