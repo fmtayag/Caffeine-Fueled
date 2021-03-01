@@ -1,3 +1,9 @@
+Release 2.0.0 (?/?/2021)
+- New game intro with zyenapz and contributors icons
+- Removed zyenapz title menu image
+- Added credits title menu option
+- Save system re-made
+
 Release 1.0.2 (1/23/2021)
 - Fixed a bug where pressing ESC key when game is over won't save the keys
 - Hats cost 20 coins now, while pets still cost 30 coins
