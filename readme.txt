@@ -1,7 +1,7 @@
 Caffeine Fueled
-Release version: 1.1
+Release version: 2.0.0
 
-Hello, there! I thank you so much for downloading Caffeine Fueled, my entry for the Pygame Community New Years Jam! I hope you enjoy the game!
+Hello, there! I'm zyenapz, i thank you so much for downloading Caffeine Fueled, my entry for the Pygame Community New Years Jam! I hope you enjoy the game!
 
 What is this game?
 ------------------
@@ -24,9 +24,9 @@ For information of how to install Pygame visit https://www.pygame.org/wiki/Getti
 
 Credits
 -------
-Originaly created and programmed by zyenapz and now contributed by Danix, art & sound effects by zyenapz.
-Font: 'Press Start' downloaded from codeman38.
-Music: 'HappyBeat' downloaded from YouTube and made by Electro Baptist.
+Created and coded by zyenapz and contributed by Danix, art & sound effects by zyenapz.
+Font 'Press Start' by codeman38.
+Music 'HappyBeat' by Electro Baptist.
 
 Contact
 -------
@@ -39,8 +39,7 @@ Danix Github: github.com/Danix421
 ---------------------
 Update 1.0.1
 - Bugfixing regarding it not running on some systems.
-Update 1.1
-- Title menu modified, (annoying) zyenapz image and info deleted,
-new intro zyenapz and Danix logos in the intro, credits option in the
-title menu and save system changed for not have to change the save file
-for delete the save, now only you have to erase the save file.
+Update 2.0.0
+- Annoying zyenapz title menu image removed, new intro
+zyenapz and contributors icons, added credits option in
+title menu and save system re-made for fix "big" bugs.
