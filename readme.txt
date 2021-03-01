@@ -12,10 +12,10 @@ https://itch.io/jam/pygame-community-jam/
 
 Controls
 --------
-W, SPACE, UP  	- Move up
+W, SPACE, UP  	  - Move up
 S, SHIFT, DOWN 		- Move down
-A, LEFT   - Move Left
-D, RIGHT   - Move Right
+A, LEFT           - Move Left
+D, RIGHT          - Move Right
 
 Requirements
 ------------
