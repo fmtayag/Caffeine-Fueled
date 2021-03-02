@@ -917,7 +917,8 @@ def run():
     manager = SceneManager(TitleScene())
     clock = pygame.time.Clock()
     FPS = 60
-
+    
+    # Intro logos
     zyenapz = load_png("dev_logo.png", IMG_DIR, 1)
     danix = load_png("dev_logo_2.png", IMG_DIR, 1)
     anim_running = True
