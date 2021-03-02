@@ -24,7 +24,8 @@ For information of how to install Pygame visit https://www.pygame.org/wiki/Getti
 
 Credits
 -------
-Created and coded by zyenapz and contributed by Danix, art & sound effects by zyenapz.
+Created and coded by zyenapz, contributed by Danix. 
+Art & sound effects by zyenapz.
 Font 'Press Start' by codeman38.
 Music 'HappyBeat' by Electro Baptist.
 
@@ -32,7 +33,7 @@ Contact
 -------
 zyenapz itch.io: zyenapz.itch.io
 zyenapz e-mail: zyenapz@gmail.com
-zyenapz web site: https://zyenapz.github.io/
+zyenapz website: https://zyenapz.github.io/
 Danix itch.io: danix421.itch.io
 Danix Github: github.com/Danix421
 
