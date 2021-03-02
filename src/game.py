@@ -1,17 +1,18 @@
-# Caffeine Fueled
-# An adventure into the cosmos
-# Programming by: zyenapz
-    # E-maiL: zyenapz@gmail.com
-    # Website: zyenapz.github.io
-# Pygame version: Pygame 2.0.0 (SDL 2.0.12, python 3.7.9)
+# Caffeine Fueled.
+# An adventure into the cosmos.
+# Created and coded by zyenapz, contributed by Danix.
+# Art & sound effects by zyenapz.
+    # zyenapz itch.io: zyenapz.itch.io
+    # zyenapz e-maiL: zyenapz@gmail.com
+    # zyenapz website: zyenapz.github.io
+    # Danix itch.io: danix421.itch.io
+    # Danix Github: github.com/Danix421
+# Created with Pygame 2.0.1 (SDL 2.0.14, python 3.8.7).
 
 # Metadata
 TITLE = "Caffeine Fueled"
-AUTHOR = "zyenapz"
-EMAIL = "zyenapz@gmail.com"
-WEBSITE = "zyenapz.github.io"
 
-import pygame, os, sys, pickle
+import pygame, os, sys, time
 from pygame.locals import *
 from random import randrange, choice, choices
 from itertools import repeat
@@ -20,7 +21,6 @@ from data.scripts.scene import Scene, SceneManager
 from data.scripts.config import *
 
 pygame.init()
-pygame.mixer.init()
 
 # Directories
 GAME_DIR = os.path.dirname(__file__)
@@ -30,27 +30,13 @@ IMG_DIR = os.path.join(DATA_DIR, "img")
 SFX_DIR = os.path.join(DATA_DIR, "sfx")
 GAME_FONT = os.path.join(FONT_DIR, "prstartk.ttf")
 
-# GameData
-class GameData:
-    def __init__(self):
-        self.equipped_pet = "none"
-        self.owned_pets = []
-        self.equipped_hat = "none"
-        self.owned_hats = []
-
-        # Stats for nerds
-        self.coins = 0
-        self.highscore = 0
-        self.times_died = 0
-        self.times_hit = 0
-        self.times_fuelpickup = 0
-        self.times_shieldpickup = 0
-        self.play_time = 0
-
 # Load game data
-infile = open(os.path.join(DATA_DIR, "user_data.dat"), "rb")
-game_data = pickle.load(infile)
-infile.close()
+try:
+    import data.user_data as game_data
+except ModuleNotFoundError:
+    with open(os.path.join(DATA_DIR, "user_data.py"), "w") as savefile:
+        savefile.write("equipped_pet = 'none'\nowned_pets = []\nequipped_hat = 'none'\nowned_hats = []\ncoins = 0\nhighscore = 0\ntimes_died = 0\ntimes_hit = 0\ntimes_fuelpickup = 0\ntimes_shieldpickup = 0\nplay_time = 0")
+    import data.user_data as game_data
 
 # Functions
 def load_sound(filename, sfx_dir, volume):
@@ -75,6 +61,10 @@ def load_png(file, directory, scale, convert_alpha=False):
     except Exception as e:
         print(e)
         exit()
+# Save game data
+def save():
+    with open(os.path.join(DATA_DIR, "user_data.py"), "w") as savefile:
+        savefile.write('equipped_pet = ' + '"' + game_data.equipped_pet + '"' + '\nowned_pets = ' + str(game_data.owned_pets) + '\nequipped_hat = ' + '"' + game_data.equipped_pet + '"' + '\nowned_hats = ' + str(game_data.owned_hats) + '\ncoins = ' + str(game_data.coins) + '\nhighscore = ' + str(game_data.highscore) + '\ntimes_died = ' + str(game_data.times_died) + '\ntimes_hit = ' + str(game_data.times_hit) + '\ntimes_fuelpickup = ' + str(game_data.times_fuelpickup) + '\ntimes_shieldpickup = ' + str(game_data.times_shieldpickup) + '\nplay_time = ' + str(game_data.play_time))
 
 # Load sounds ====================
 select_sfx = load_sound("select.wav", SFX_DIR, 0.6)
@@ -86,6 +76,7 @@ explosion_sfx = load_sound("explosion.wav", SFX_DIR, 0.5)
 class TitleScene(Scene):
     def __init__(self):
         # Booleans
+        self.credits_available = False
         self.help_available = False
         self.stats_available = False
 
@@ -95,10 +86,11 @@ class TitleScene(Scene):
         self.menu_area_rect.centerx = WIN_SZ[0] / 2
         self.menu_area_rect.y = 200
         self.logo_img = load_png("logo.png", IMG_DIR, 4)
+        self.credits_area = pygame.Surface((300, 450))
+        self.credits_img = load_png("credits.png", IMG_DIR, 1)
         self.help_area = pygame.Surface((300, 450))
         self.help_img = load_png("help.png", IMG_DIR, 4)
         self.stats_area = pygame.Surface((300, 450))
-        self.dev_img = load_png("dev_info.png", IMG_DIR, 4)
 
         self.bg_layer1_x = 0
         self.bg_layer2_x = 0
@@ -112,9 +104,9 @@ class TitleScene(Scene):
         self.bg_layer3_rect = self.bg_layer3_img.get_rect()
 
         # Selector
-        self.y_offset = 32
+        self.y_offset = 15
         self.selector_width = 6
-        self.selector_y = -self.selector_width + self.y_offset
+        self.selector_y = self.y_offset - 10
         self.cur_sel = 0
 
         # Sprite groups
@@ -124,16 +116,18 @@ class TitleScene(Scene):
 
         # Texts for menu
         #self.text_title = Text(self.menu_area.get_width() / 2, self.menu_area.get_height () / 8, "CAFFEINE", GAME_FONT, 48, 'white')
-        self.text_play = Text(self.menu_area.get_width() / 2, 0 + self.y_offset, "PLAY", GAME_FONT, 34, 'white')
-        self.text_shop = Text(self.menu_area.get_width() / 2, 45 + self.y_offset, "SHOP", GAME_FONT, 32, 'yellow')
-        self.text_stats = Text(self.menu_area.get_width() / 2, 90 + self.y_offset, "STATS", GAME_FONT, 32, 'white')
-        self.text_help = Text(self.menu_area.get_width() / 2, 135 + self.y_offset, "HELP", GAME_FONT, 32, 'white')
-        self.text_quit = Text(self.menu_area.get_width() / 2, 180 + self.y_offset, "QUIT", GAME_FONT, 32, 'white')
+        self.text_play = Text(self.menu_area.get_width() / 2, -5 + self.y_offset, "PLAY", GAME_FONT, 34, 'white')
+        self.text_shop = Text(self.menu_area.get_width() / 2, 40 + self.y_offset, "SHOP", GAME_FONT, 32, 'yellow')
+        self.text_stats = Text(self.menu_area.get_width() / 2, 85 + self.y_offset, "STATS", GAME_FONT, 32, 'white')
+        self.text_help = Text(self.menu_area.get_width() / 2, 130 + self.y_offset, "HELP", GAME_FONT, 32, 'white')
+        self.text_credits = Text(self.menu_area.get_width() / 2, 175 + self.y_offset, "CREDITS", GAME_FONT, 32, 'white')
+        self.text_quit = Text(self.menu_area.get_width() / 2, 220 + self.y_offset, "QUIT", GAME_FONT, 32, 'white')
         #self.texts.add(self.text_title)
         self.optiontexts.add(self.text_play)
         self.optiontexts.add(self.text_shop)
         self.optiontexts.add(self.text_stats)
         self.optiontexts.add(self.text_help)
+        self.optiontexts.add(self.text_credits)
         self.optiontexts.add(self.text_quit)
 
         # Texts for help area
@@ -185,17 +179,22 @@ class TitleScene(Scene):
                     elif self.cur_sel == 1:
                         self.manager.go_to(ShopScene())
                     elif self.cur_sel == 2:
-                        self.stats_available = not self.stats_available
+                        self.credits_available = False
                         self.help_available = False
+                        self.stats_available = not self.stats_available
                     elif self.cur_sel == 3:
+                        self.credits_available = False
                         self.stats_available = False
                         self.help_available = not self.help_available
                     elif self.cur_sel == 4:
-                        # Save data and exit
+                        self.help_available = False
+                        self.stats_available = False
+                        self.credits_available = not self.credits_available
+                    elif self.cur_sel == 5:
+                        # Save game data and exit
                         #game_data.coins = 3000
-                        outfile = open(os.path.join(DATA_DIR, "user_data.dat"), "wb")
-                        pickle.dump(game_data, outfile)
-                        outfile.close()
+                        save()
+                        pygame.quit()
                         sys.exit()
                     enter_sfx.play()
 
@@ -215,9 +214,13 @@ class TitleScene(Scene):
         self.draw_background(window, self.bg_layer1_img, self.bg_layer1_rect, self.bg_layer1_x)
         self.draw_background(window, self.bg_layer2_img, self.bg_layer2_rect, self.bg_layer2_x)
         self.draw_background(window, self.bg_layer3_img, self.bg_layer3_rect, self.bg_layer3_x)
-        window.blit(self.logo_img, (32,64))
-        window.blit(self.menu_area, (96,198))
-        window.blit(self.dev_img, (360,128))
+        window.blit(self.logo_img, (190,64))
+        window.blit(self.menu_area, (260,198))
+        if self.credits_available:
+            window.blit(self.credits_area, (430, 32))
+            self.credits_area.fill('black')
+            self.credits_area.blit(self.credits_img, (0,0))
+            pygame.draw.rect(self.credits_area, 'white', (0,0,self.credits_area.get_width(),self.credits_area.get_height()), 8)
         if self.help_available:
             window.blit(self.help_area, (430, 32))
             self.help_area.fill('black')
@@ -322,7 +325,6 @@ class ShopScene(Scene):
         # YandereDev-esque code here. Beware!
         for event in events:
             if event.type == pygame.KEYDOWN:
-
                 if self.cur_shop == self.pets_area:
                     if event.key == pygame.K_d and self.cur_pet < len(self.pet_files) - 1:
                         self.selector_x += 64 + self.init_x
@@ -398,6 +400,7 @@ class ShopScene(Scene):
                     select_sfx.play()
 
                 if event.key == pygame.K_ESCAPE:
+                    save()
                     self.manager.go_to(TitleScene())
                     enter_sfx.play()
 
@@ -660,18 +663,20 @@ class GameScene(Scene):
                         game_data.highscore = round(self.score)
                     game_data.times_died += 1
                     game_data.play_time += round(self.cur_playtime / 1000)
+                    save()
                     self.manager.go_to(TitleScene())
 
                 if event.key == pygame.K_ESCAPE:
-                    self.manager.go_to(TitleScene())
                     game_data.play_time += round(self.cur_playtime / 1000)
-
+                    save()
+                    self.manager.go_to(TitleScene())
                     if self.can_exit:
                         game_data.coins += self.coins
                         if round(self.score) > game_data.highscore:
                             game_data.highscore = round(self.score)
                         game_data.times_died += 1
                         game_data.play_time += round(self.cur_playtime / 1000)
+                        save()
                         self.manager.go_to(TitleScene())
 
     def update(self):
@@ -766,12 +771,12 @@ class GameScene(Scene):
         if self.player.is_dead:
             self.exit_ticks += 10
             self.text_gameover.visible = True
-
             if self.exit_ticks > 500:
                 self.text_finalscore.visible = True
                 self.text_finalcoin.visible = True
                 self.text_finalscore.text = "Score " + str(round(self.score))
                 self.text_finalcoin.text = "Coin " + str(self.coins)
+                save()
                 self.text_exitbutton.visible = True
                 self.can_exit = True
 
@@ -894,7 +899,7 @@ class GameScene(Scene):
             self.sprites.add(t)
 
 # Application loop
-def main():
+def run():
 
     # Initialize the window
     window = pygame.display.set_mode(WIN_SZ)
@@ -913,12 +918,25 @@ def main():
     clock = pygame.time.Clock()
     FPS = 60
 
+    zyenapz = load_png("dev_logo.png", IMG_DIR, 1)
+    danix = load_png("dev_logo_2.png", IMG_DIR, 1)
+    anim_running = True
+    window.blit(zyenapz, (0, 0))
+    pygame.display.flip()
+    time.sleep(1.5)
+    window.blit(danix, (0, 0))
+    pygame.display.flip()
+    time.sleep(1.5)
+
     while running:
         
         clock.tick(FPS)
         
         if pygame.event.get(QUIT):
-            running = False
+            # Save the game data and exit
+            save()
+            pygame.quit()
+            sys.exit()
 
         manager.scene.handle_events(pygame.event.get())
         manager.scene.update()
@@ -927,13 +945,4 @@ def main():
         pygame.display.flip()
     
 # Run the application loop
-main()
-
-# Exit pygame and application, and save user data
-pygame.quit()
-
-outfile = open(os.path.join(DATA_DIR, "user_data.dat"), "wb")
-pickle.dump(game_data, outfile)
-outfile.close()
-
-sys.exit()
+run()
