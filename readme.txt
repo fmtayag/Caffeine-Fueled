@@ -42,5 +42,6 @@ Update 1.0.1
 - Bugfixing regarding it not running on some systems.
 Update 2.0.0
 - Annoying zyenapz title menu image removed, new intro
-zyenapz and contributors icons, added credits option in
-title menu and save system re-made for fix "big" bugs.
+zyenapz and contributors(now, only Danix) icons, added
+credits option in title menu and save system re-made 
+for fix "big" bugs.
