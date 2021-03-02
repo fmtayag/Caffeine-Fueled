@@ -1,6 +1,8 @@
-Release 2.0.0 (?/?/2021)
-- New game intro with zyenapz and contributors icons
+Release 2.0.0 (3/2/2021)
+- New game intro with zyenapz and contributors (now, only Danix) icons
 - Removed zyenapz title menu image
+- Added 32bits Windows support
+- Removed console from Windows executable
 - Added credits title menu option
 - Save system re-made
 
