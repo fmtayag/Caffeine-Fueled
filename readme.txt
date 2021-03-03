@@ -43,6 +43,5 @@ Update 1.0.1
 Update 2.0.0
 - Annoying zyenapz title menu image removed, new intro
 zyenapz and contributors (now, only Danix) logos, added
-32bits Windows support, removed console in executable version,
-added credits option in title menu and save system re-made for fix
+credits option in title menu and save system re-made for fix
 "big" bugs.
