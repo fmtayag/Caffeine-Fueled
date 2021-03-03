@@ -1,10 +1,8 @@
 Release 2.0.0 (3/2/2021)
 - New game intro with zyenapz and contributors (now, only Danix) logos
 - Removed zyenapz title menu image
-- Added 32bits Windows support
-- Removed console from Windows executable
 - Added credits title menu option
-- Save system re-made (GameData class removed)
+- Save system re-made (due to that, GameData class removed)
 
 Release 1.0.2 (1/23/2021)
 - Fixed a bug where pressing ESC key when game is over won't save the keys
