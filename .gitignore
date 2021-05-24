@@ -1,0 +1,8 @@
+# Byte-compiled / optimized / DLL files
+SOURCE/data/scripts/__pycache__/
+SOURCE/data/scripts/_userdat.dat
+SOURCE/data/scripts/_scores.dat
+ADVERTS/
+DEV/
+RELEASES/
+*.py[cod]
